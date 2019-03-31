@@ -139,9 +139,9 @@ string reconstructDna(const set<string>& spectrum, const string& startOligo, con
 }
 
 
-int compareDna(const string& dna1, const string& dna2)
+double compareDna(const string& dna1, const string& dna2)
 {
-    return compute(dna1, dna2);
+    return 1.0 - double(compute(dna1, dna2)) / double(dna1.size());
 }
 
 
@@ -163,7 +163,7 @@ int main(int argc, char* argv[])
     cout << "ORIGINAL DNA [" << config.n << "]\n";
     cout << config.dna << endl << endl;
 
-    int similarity = compareDna(config.dna, dna);
+    auto similarity = compareDna(config.dna, dna);
     cout << "SIMILARITY LEVEL: " << similarity << endl;
 
     return 0;
