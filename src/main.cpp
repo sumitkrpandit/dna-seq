@@ -32,6 +32,16 @@ set<string> buildCompleteSpectrum(const Config& config)
 }
 
 
+void injectPositiveError(set<string>& spectrum)
+{
+}
+
+
+void injectNegativeError(set<string>& spectrum)
+{
+}
+
+
 string reconstructDna(const set<string>& spectrum, const Config& config)
 {
     string dna;
