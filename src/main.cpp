@@ -10,9 +10,11 @@ using namespace std;
 
 struct Config
 {
+    Config(int k, string seq) : k(k), dna(seq), n(dna.size()) {};
     Config() :
         k(3), 
-        dna("ACGTATAGGGATTTGGGGGGGGCCCCCAATAGGGGGCCCTTTTTTTAAAA"),
+        //dna("ACGTATA"),
+        dna("ACGTAAAATTTTTTATACCCGGCGCGTA"),
         n(dna.size())
     {
     }
@@ -21,6 +23,15 @@ struct Config
     const int k;
     const int n;
 };
+
+
+Config readConfigFromUser()
+{
+    int k;
+    string seq;
+    cin >> k >> seq;
+    return Config(k, seq);
+}
 
 
 #define min(a, b) (a < b ? a : b)
@@ -55,7 +66,7 @@ int compute(string a, string b)
 set<string> buildCompleteSpectrum(const Config& config)
 {
     set<string> spectrum;
-    for (int pos=0; pos<config.n - config.k; ++pos) {
+    for (int pos=0; pos<config.n - config.k + 1; ++pos) {
         spectrum.insert(config.dna.substr(pos, config.k));
     }
     return spectrum;
@@ -75,8 +86,11 @@ void injectNegativeError(set<string>& spectrum)
 int _distance(string a, string b)
 {
     int dist = 0;
-    for (int i=1; i<a.size(); ++i) {
-        if (a[i] == b[i-1]) { dist++; }
+    for (int i=a.size()-1; i>0; --i) {
+        if (a.substr(a.size() - i, i) == b.substr(0, i)) {
+            dist = i;
+            break;
+        }
     }
     return dist;
 }
@@ -115,6 +129,7 @@ string reconstructDna(const set<string>& spectrum, const string& startOligo, con
 
     // print distances debug
     /*for (int i=0; i<distances.size(); ++i) {
+        cout << "node: " << nodes[i] << ": ";
         for (int j=0; j<distances[i].size(); ++j) {
             cout << distances[i][j] << " ";
         }
@@ -141,13 +156,14 @@ string reconstructDna(const set<string>& spectrum, const string& startOligo, con
 
 double compareDna(const string& dna1, const string& dna2)
 {
-    return 1.0 - double(compute(dna1, dna2)) / double(dna1.size());
+    double measure = 1.0 - double(compute(dna1, dna2)) / double(dna1.size());
+    return measure * 100.0;
 }
 
 
 int main(int argc, char* argv[])
 {
-    Config config;
+    auto config = readConfigFromUser();
 
     auto spectrum = buildCompleteSpectrum(config);
     cout << "SPECTRUM -> { ";
@@ -164,7 +180,7 @@ int main(int argc, char* argv[])
     cout << config.dna << endl << endl;
 
     auto similarity = compareDna(config.dna, dna);
-    cout << "SIMILARITY LEVEL: " << similarity << endl;
+    cout << "SIMILARITY LEVEL: " << similarity << "%\n";
 
     return 0;
 }
