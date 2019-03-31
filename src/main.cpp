@@ -96,14 +96,12 @@ void injectNegativeError(set<string>& spectrum)
 
 int _distance(string a, string b)
 {
-    int dist = 0;
     for (int i=a.size()-1; i>0; --i) {
         if (a.substr(a.size() - i, i) == b.substr(0, i)) {
-            dist = i;
-            break;
+            return i;
         }
     }
-    return dist;
+    return 0;
 }
 
 
@@ -118,7 +116,7 @@ string reconstructDna(const set<string>& spectrum, const string& startOligo, con
     // compute distances
     vector<vector<int>> distances(nodes.size(), vector<int>(nodes.size(), 0));
     for (int i=0; i<nodes.size(); ++i) {
-        distances[i][i] = -1; // magic dist smaller than any possible dist.
+        distances[i][i] = -1;
         for (int j=0; j<nodes.size(); ++j) {
             if (i == j) continue;
             distances[i][j] = _distance(nodes[i], nodes[j]);
