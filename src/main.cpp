@@ -13,8 +13,7 @@ struct Config
     Config(int k, string seq) : k(k), dna(seq), n(dna.size()) {};
     Config() :
         k(3), 
-        //dna("ACGTATA"),
-        dna("ACGTAAAATTTTTTATACCCGGCGCGTA"),
+        dna("ACGTATA"),
         n(dna.size())
     {
     }
@@ -36,6 +35,18 @@ Config readConfigFromUser()
 
 #define min(a, b) (a < b ? a : b)
 #define max(a, b) (a > b ? a : b)
+
+
+int indexOfMax(vector<int> v) {
+    int max = v[0], id=0;
+    for (int i=1; i<v.size(); ++i) {
+        if (v[i] > max) {
+            max = v[i];
+            id = i;
+        }
+    }
+    return id;
+}
 
 
 int compute(string a, string b)
@@ -96,18 +107,6 @@ int _distance(string a, string b)
 }
 
 
-int indexOfMax(vector<int> v) {
-    int max = v[0], id=0;
-    for (int i=1; i<v.size(); ++i) {
-        if (v[i] > max) {
-            max = v[i];
-            id = i;
-        }
-    }
-    return id;
-}
-
-
 string reconstructDna(const set<string>& spectrum, const string& startOligo, const Config& config)
 {
     vector<string> nodes;
@@ -127,24 +126,9 @@ string reconstructDna(const set<string>& spectrum, const string& startOligo, con
         }
     }
 
-    // print distances debug
-    /*for (int i=0; i<distances.size(); ++i) {
-        cout << "node: " << nodes[i] << ": ";
-        for (int j=0; j<distances[i].size(); ++j) {
-            cout << distances[i][j] << " ";
-        }
-        cout << endl;
-    }*/
-
     // reconstruction
     string dna = nodes[id];
     while (dna.size() < config.n) {
-
-        // debug print
-        //cout << "node: " << nodes[id] << endl;
-        //int x; cin >> x;
-
-
         int bestId = indexOfMax(distances[id]);
         dna += nodes[bestId][config.k-1];
         id = bestId;
