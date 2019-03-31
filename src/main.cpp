@@ -12,7 +12,7 @@ struct Config
 {
     Config() :
         k(3), 
-        dna("ACGTATAGGG"),
+        dna("ACGTATAGGGATTTGGGGGGGGCCCCCAATAGGGGGCCCTTTTTTTAAAA"),
         n(dna.size())
     {
     }
@@ -157,10 +157,14 @@ int main(int argc, char* argv[])
     cout << "}\n\n";
 
     string dna = reconstructDna(spectrum, config.dna.substr(0, config.k), config);
-    cout << "RECONSTRUCTED DNA:\n";
+    cout << "RECONSTRUCTED DNA [" << dna.size() << "]\n";
     cout << dna << endl << endl;
+
+    cout << "ORIGINAL DNA [" << config.n << "]\n";
+    cout << config.dna << endl << endl;
 
     int similarity = compareDna(config.dna, dna);
     cout << "SIMILARITY LEVEL: " << similarity << endl;
+
     return 0;
 }
