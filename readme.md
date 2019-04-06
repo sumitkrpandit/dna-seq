@@ -24,6 +24,18 @@ problem with genetic algorithm:
         + by errors distribution
         + by biological heuristics (only for biological sequencing problem,
                 not applicable for random strings)
+
+        if fitness function is defined as a similarity between the reference sequence
+        and generated sequence than it cannot be computed without usage of reference
+        sequence.
+
+        If reference sequence is omitted than the only remaining data is the spectrum.
+        So a fitness function should be defined based on generated sequence and
+        registered spectrum.
+
+        a) multiple spectrums
+        b) errors
+        c) equal fitness
         
 
 - powtórzenia
