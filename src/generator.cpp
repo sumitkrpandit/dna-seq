@@ -22,7 +22,7 @@ char randomNucleotide()
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2) {
+    if (argc < 3) {
         cout << "Invalid number of arguments." << endl;
         return 0;
     }
@@ -30,12 +30,15 @@ int main(int argc, char* argv[])
     srand(time(nullptr));
 
     int n = atoi(argv[1]);
+    int k = atoi(argv[2]);
+    
     string dna = "";
 
     for (int i=0; i<n; ++i) {
        dna += randomNucleotide();
     }
 
+    cout << k << endl;
     cout << dna << endl;
 
     return 0;
