@@ -10,8 +10,12 @@ using namespace std;
 
 char randomNucleotide()
 {
+    static random_device r;
+    static default_random_engine engine(r());
+    static uniform_int_distribution<int> uniform_dist(0, 3);
     static const char _nucleotides[] = "CAGT";
-    int x = rand() % 4;
+
+    int x = uniform_dist(engine);
     return _nucleotides[x];
 }
 
