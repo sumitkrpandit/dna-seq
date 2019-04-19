@@ -1,0 +1,151 @@
+#include "genetic.hpp"
+#include "config.hpp"
+#include "utils.hpp"
+#include "levensthein.hpp"
+
+#include <random>
+#include <algorithm>
+#include <iostream>
+
+
+using namespace std;
+
+
+char randomNucleotide()
+{
+    static random_device r;
+    static default_random_engine engine(r());
+    static uniform_int_distribution<int> uniform_dist(0, 3);
+    static const char _nucleotides[] = "CAGT";
+
+    int x = uniform_dist(engine);
+    return _nucleotides[x];
+}
+
+
+string randomSequence(int n)
+{
+    string sequence = "";
+    for (int i=0; i<n; ++i) {
+        sequence += randomNucleotide();
+    }
+    return sequence;
+}
+
+
+// real value from 0 - 100
+double fitness(const string& dna, const string& ref)
+{
+    return compareDna(dna, ref);
+}
+
+
+string cross(string a, string b)
+{
+    string c = "";
+    for (int i=0; i<a.size(); ++i) {
+        c += rand()%2 ? a[i] : b[i];
+    }
+    return c;
+}
+
+
+void mutate(string& dna, int mutations)
+{
+    for (int i=0; i<mutations; ++i) {
+        int id = rand() % dna.size();
+        dna[id] = randomNucleotide();
+    }
+}
+
+
+// TODO: select without repetitions
+vector<int> lottery(const vector<double>& values, int k)
+{
+    vector<int> pool;
+    for (int i=0; i<values.size(); ++i) {
+        int tickets = static_cast<int>(values[i]);
+        for (int t=0; t<tickets; ++t) pool.push_back(i);
+    }
+
+    vector<pair<int, int>> randomized;
+    for (int i=0; i<pool.size(); ++i) {
+        randomized.push_back({rand() % pool.size(), pool[i]});
+    }
+
+    sort(randomized.begin(), randomized.end(), [](const pair<int,int>& x, const pair<int,int>& y) -> bool {
+        return x.first < y.first;
+    });
+
+    vector<int> winners;
+    for (int i=0; i<k; ++i) {
+        winners.push_back(randomized[rand() % randomized.size()].second);
+    }
+
+    return winners;
+}
+
+
+vector<string> select(vector<string>& population, int k, const string& ref)
+{
+    vector<string> winners;
+    vector<double> values;
+    for (const auto& dna: population) {
+        values.push_back(fitness(dna, ref));
+    }
+    auto selected_ids = lottery(values, k);
+    for (int id: selected_ids) {
+        winners.push_back(population[id]);
+    }
+    return winners;
+}
+
+
+set<string> reconstructDna(
+    const vector<string>& spectrum,
+    const string& start,
+    const Config& config)
+{
+    const int populationSize = 100;
+    const int maxPopulations = 1000;
+    const int mutationsNumber = 5;
+    const int mutationsPerDNA = 3;
+    const int crossoversNumber = 20;
+
+    vector<string> population;
+
+    // random initial population
+    for (int i=0; i<populationSize; ++i) {
+        population.push_back(randomSequence(config.n));
+    }
+
+    // evolution
+    int popCount = 0;
+    while (popCount++ <= maxPopulations)
+    {
+        // mutations
+        for (int i=0; i<mutationsNumber; ++i) {
+            int poorBastard = rand() % populationSize;
+            mutate(population[poorBastard], mutationsPerDNA);
+        }
+
+        // selection
+        auto nextGeneration = select(population, populationSize - crossoversNumber, config.dna);
+
+        // crossovers
+        for (int i=0; i<crossoversNumber; ++i) {
+            int one = rand() % populationSize;
+            int two = rand() % populationSize;
+            string newGuy = cross(population[one], population[2]);
+            nextGeneration.push_back(newGuy);
+        }
+
+        // replacement
+        population = nextGeneration;
+    }
+
+    
+    // convert to output format
+    set<string> solutions(population.begin(), population.end());
+    return solutions;
+}

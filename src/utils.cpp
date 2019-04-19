@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include <iostream>
 
 
 int findMax(std::vector<int> v) {
@@ -21,5 +22,12 @@ int overlap(std::string a, std::string b)
         }
     }
     return 0;
+}
+
+
+std::vector<double> normalize(const std::vector<double>& v)
+{
+    std::cout << "normalize() operation not implemented.\n";
+    return v;
 }
 

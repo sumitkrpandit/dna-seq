@@ -21,9 +21,10 @@ vector<vector<int>> buildGraph(const vector<string>& spectrum)
 }
 
 
-string reconstructDna(const vector<string>& spectrum, const string& first, const Config& config)
+set<string> reconstructDna(const vector<string>& spectrum, const string& first, const Config& config)
 {
     auto distances = buildGraph(spectrum);
+    set<string> solutions;
 
     int id = distance(
         spectrum.begin(), 
@@ -36,7 +37,7 @@ string reconstructDna(const vector<string>& spectrum, const string& first, const
         dna += spectrum[bestId][config.k-1];
         id = bestId;
     }
-
-    return dna;
+    solutions.insert(dna);
+    return solutions;
 }
 
