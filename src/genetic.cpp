@@ -93,6 +93,9 @@ vector<string> select(vector<string>& population, int k, const string& ref)
     for (const auto& dna: population) {
         values.push_back(fitness(dna, ref));
     }
+
+    cout << "best: " << values[findMax(values)] << endl;
+
     auto selected_ids = lottery(values, k);
     for (int id: selected_ids) {
         winners.push_back(population[id]);
@@ -106,8 +109,8 @@ set<string> reconstructDna(
     const string& start,
     const Config& config)
 {
-    const int populationSize = 100;
-    const int maxPopulations = 1000;
+    const int populationSize = 20;
+    const int maxPopulations = 2000;
     const int mutationsNumber = 5;
     const int mutationsPerDNA = 3;
     const int crossoversNumber = 20;
@@ -123,6 +126,7 @@ set<string> reconstructDna(
     int popCount = 0;
     while (popCount++ <= maxPopulations)
     {
+        if (popCount % 10 == 0) cout << "generation #" << popCount << endl;
         // mutations
         for (int i=0; i<mutationsNumber; ++i) {
             int poorBastard = rand() % populationSize;

@@ -2,16 +2,6 @@
 #include <iostream>
 
 
-int findMax(std::vector<int> v) {
-    int max = v[0], id=0;
-    for (int i=1; i<v.size(); ++i) {
-        if (v[i] > max) {
-            max = v[i];
-            id = i;
-        }
-    }
-    return id;
-}
 
 
 int overlap(std::string a, std::string b)
