@@ -43,8 +43,9 @@ double fitness(const string& dna, const string& ref)
 string cross(string a, string b)
 {
     string c = "";
-    for (int i=0; i<a.size(); ++i) {
-        c += rand()%2 ? a[i] : b[i];
+    int k = 7;
+    for (int i=0; i<a.size(); i+=k) {
+        c += rand()%2 ? a.substr(i, k) : b.substr(i, k);
     }
     return c;
 }
@@ -109,8 +110,8 @@ set<string> reconstructDna(
     const string& start,
     const Config& config)
 {
-    const int populationSize = 20;
-    const int maxPopulations = 2000;
+    const int populationSize = 100;
+    const int maxPopulations = 1000;
     const int mutationsNumber = 5;
     const int mutationsPerDNA = 3;
     const int crossoversNumber = 20;
