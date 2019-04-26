@@ -60,7 +60,21 @@ void mutate(string& dna, int mutations)
 }
 
 
-// TODO: select without repetitions
+// TODO: select withoutrepetitions
+vector<int> lottery_no_rep(const vector<double>& values, int k)
+{
+    vector<int> winners;
+    int i = 0;
+    while (winners.size() < k) {
+        if (static_cast<double>(rand() % 100) <= values[i]) {
+            winners.push_back(i);
+            i = (i+1) % values.size();
+        }
+    }
+    return winners;
+}
+
+
 vector<int> lottery(const vector<double>& values, int k)
 {
     vector<int> pool;
@@ -95,9 +109,11 @@ vector<string> select(vector<string>& population, int k, const string& ref)
         values.push_back(fitness(dna, ref));
     }
 
-    cout << "best: " << values[findMax(values)] << endl;
+    int bestId = findMax(values);
+    cout << "best value in population: " << values[bestId] << endl;
+    winners.push_back(population[bestId]);
 
-    auto selected_ids = lottery(values, k);
+    auto selected_ids = lottery_no_rep(values, k-1);
     for (int id: selected_ids) {
         winners.push_back(population[id]);
     }
@@ -148,9 +164,9 @@ set<string> reconstructDna(
         // replacement
         population = nextGeneration;
     }
-
-    
+ 
     // convert to output format
     set<string> solutions(population.begin(), population.end());
     return solutions;
 }
+
