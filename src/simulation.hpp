@@ -10,6 +10,7 @@ class Config;
 
 
 std::vector<std::string> buildCompleteSpectrum(const Config& config);
+std::vector<std::string> buildCompleteSpectrum(const std::string& dna, int k);
 void injectPositiveError(std::vector<std::string>& spectrum);
 void injectNegativeError(std::vector<std::string>& spectrum);
 

@@ -2,6 +2,8 @@
 #include "config.hpp"
 #include "utils.hpp"
 #include "levensthein.hpp"
+#include "simulation.hpp"
+
 
 #include <random>
 #include <algorithm>
@@ -40,6 +42,22 @@ double fitness(const string& dna, const string& ref)
 }
 
 
+double fitness(const string& dna, const vector<string>& ref_spectrum)
+{
+    int k = ref_spectrum.begin()->size();
+    auto spectrum = buildCompleteSpectrum(dna, k);
+
+    int similarity = (ref_spectrum.size() - spectrum.size());
+    similarity = similarity < 0 ? -similarity : similarity;
+    similarity *= k;
+
+    // Do i need pevzner graph to compare those spectra?
+
+    // how to measure similarity between two spectra?
+    return 50.0f;
+}
+
+
 string cross(string a, string b)
 {
     string c = "";
@@ -60,7 +78,7 @@ void mutate(string& dna, int mutations)
 }
 
 
-// TODO: select withoutrepetitions
+// TODO: still with reps ...
 vector<int> lottery_no_rep(const vector<double>& values, int k)
 {
     vector<int> winners;
